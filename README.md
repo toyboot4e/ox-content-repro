@@ -19,6 +19,20 @@ pnpm install
 pnpm check   # vite build + assertions; BUG lines show what is broken
 ```
 
+```
+✓ built in 46ms
+[ox-content] Generated 8 output files
+[ox-content] Search index written to /home/tbm/dev/ts/ox-content/ox-content-repro/dist/search-index.json
+BUG private class fields leak into the docs — dist/api/lib/classes/Counter/index.html lists `count` / `step`
+BUG readonly badge jammed against the member name — `initial`readonly — no whitespace, and no .ox-api-badge rule in the theme
+BUG member markup ships without theme styles — ox-api-badge, ox-api-entry__members-table, ox-api-entry__member-detail used by the page but unstyled
+BUG param-type chip dark in light theme — .ox-api-entry__param-type builds on the code-block palette
+BUG module links rewritten to a nonexistent index/index.html page — docs index links ./lib/index.md as ./lib/index/index.html
+BUG second member group squeezed into the narrow label column — section grid auto-places the Methods group into the 6.5rem column
+BUG raw md anchors left unconverted — createCounter page links CounterOptions as ../type-aliases/CounterOptions.md
+BUG search index unavailable on the dev server — /search-index.json served the html fallback
+```
+
 All eight bugs are exercised by the one entry `src/lib.ts` (a class, a type
 alias, a function).
 
