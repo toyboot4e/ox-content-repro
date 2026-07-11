@@ -1,0 +1,17 @@
+{
+  "name": "ox-content-api-docs-repro",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimum repro for four API-docs bugs: private class fields leak, unstyled member markup (readonly badge jammed against the name), dark param-type chip in light theme, search index unavailable on the dev server.",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "check": "vite build && node check.mjs"
+  },
+  "dependencies": {
+    "@ox-content/napi": "link:../crates/ox_content_napi",
+    "@ox-content/vite-plugin": "link:../npm/vite-plugin-ox-content",
+    "vite": "^8.1.3"
+  }
+}
