@@ -15,7 +15,7 @@ workspace's own build (`link:` deps on `../crates/ox_content_napi` and
 pnpm -w install
 (cd ../crates/ox_content_napi && pnpm run build:debug)
 (cd ../npm/vite-plugin-ox-content && pnpm build)
-pnpm install
+pnpm install --ignore-workspace
 pnpm check   # vite build + assertions; BUG lines show what is broken
 ```
 
