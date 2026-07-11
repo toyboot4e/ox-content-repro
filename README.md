@@ -8,6 +8,10 @@ ox-content/
 ```
 
 ```sh
+nix-shell -p pnpm
+```
+
+```sh
 git clone https://github.com/ubugeeei-prod/ox-content
 cd ox-content
 pnpm install
