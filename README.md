@@ -7,9 +7,17 @@ ox-content/
 └── ox-content-repro/
 ```
 
+```sh
+git clone https://github.com/ubugeeei-prod/ox-content
+cd ox-content
+pnpm install
+git clone https://github.com/toyboot4e/ox-content-repro
+cd ox-content-repro
+```
+
 Reproduces eight bugs in ox-content's generated API reference, using the
 workspace's own build (`link:` deps on `../crates/ox_content_napi` and
-`../npm/vite-plugin-ox-content`). Build both first:
+`../npm/vite-plugin-ox-content`). Build both first and run the check:
 
 ```sh
 pnpm -w install
@@ -20,6 +28,7 @@ pnpm check   # vite build + assertions; BUG lines show what is broken
 ```
 
 ```
+...
 ✓ built in 46ms
 [ox-content] Generated 8 output files
 [ox-content] Search index written to /home/tbm/dev/ts/ox-content/ox-content-repro/dist/search-index.json
@@ -31,6 +40,13 @@ BUG module links rewritten to a nonexistent index/index.html page — docs index
 BUG second member group squeezed into the narrow label column — section grid auto-places the Methods group into the 6.5rem column
 BUG raw md anchors left unconverted — createCounter page links CounterOptions as ../type-aliases/CounterOptions.md
 BUG search index unavailable on the dev server — /search-index.json served the html fallback
+```
+
+Or, run dev server and open http://localhost:5173/api:
+
+```
+pnpm run dev
+# open http://localhost:5173/api
 ```
 
 All eight bugs are exercised by the one entry `src/lib.ts` (a class, a type
