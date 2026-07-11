@@ -46,7 +46,12 @@ report(
 );
 
 // 4. /search-index.json must be served (as JSON) by the dev server.
-const server = spawn('pnpm', ['exec', 'vite', '--port', '5399', '--strictPort'], { stdio: 'ignore' });
+// detached: killing the negative pid takes the whole group (pnpm AND vite);
+// killing only the wrapper leaves vite squatting on the port for the next run.
+const server = spawn('pnpm', ['exec', 'vite', '--port', '5399', '--strictPort'], {
+  stdio: 'ignore',
+  detached: true,
+});
 try {
   let body = '';
   for (let i = 0; i < 20; i++) {
@@ -63,7 +68,7 @@ try {
   } catch {}
   report('search index unavailable on the dev server', !isJson, '/search-index.json served the html fallback');
 } finally {
-  server.kill();
+  process.kill(-server.pid, 'SIGTERM');
 }
 
 let failed = false;
