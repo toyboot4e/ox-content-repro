@@ -23,9 +23,11 @@ const css = assets.map((f) => read(join('dist/assets', f))).join('\n');
 
 // 2. readonly badge: jammed markup + no styles for the member markup at all.
 const typePage = read('dist/api/lib/type-aliases/CounterOptions/index.html');
+// Fixed when the theme styles the badge (inline-block pill with its own
+// margin) — the compact markup itself is fine once styled.
 report(
   'readonly badge jammed against the member name',
-  typePage.includes('</code><span class="ox-api-badge">'),
+  typePage.includes('ox-api-badge') && !css.includes('.ox-api-badge'),
   '`initial`readonly — no whitespace, and no .ox-api-badge rule in the theme',
 );
 const memberClasses = ['ox-api-badge', 'ox-api-entry__members-table', 'ox-api-entry__member-detail'];
