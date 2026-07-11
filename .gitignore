@@ -1,4 +1,6 @@
 node_modules
 dist
 content/api
-compare
+# compare/ IS committed — the browsable before/after snapshots (see README).
+# Ignore only the rebuild scratch a regenerate leaves beside them.
+compare/*.new

@@ -1,6 +1,6 @@
 # API-docs minimum repro
 
-Reproduces four bugs in ox-content's generated API reference, using the
+Reproduces eight bugs in ox-content's generated API reference, using the
 workspace's own build (`link:` deps on `../crates/ox_content_napi` and
 `../npm/vite-plugin-ox-content`). Build both first:
 
@@ -12,7 +12,7 @@ pnpm install
 pnpm check   # vite build + assertions; BUG lines show what is broken
 ```
 
-All four bugs are exercised by the one entry `src/lib.ts` (a class, a type
+All eight bugs are exercised by the one entry `src/lib.ts` (a class, a type
 alias, a function).
 
 1. **TS-`private` class fields leak into the docs.** `Counter`'s `count` and
@@ -49,3 +49,29 @@ alias, a function).
    no handler for it, so the fetch falls through to the html fallback and the
    search UI reports the index unavailable. (`pnpm dev`, then request
    `/search-index.json`.)
+
+## Browse before / after
+
+`compare/` holds two full generated sites committed for browsing without a
+Rust rebuild: `before/` (built on upstream `fd9a0c5`, every bug present) and
+`after/` (built on the fix branch, all fixed), plus `index.html`, a
+side-by-side viewer.
+
+The snapshots build with `base: /`, so their pages use root-absolute asset
+and nav URLs — each must be served from its own origin's root. Run two
+servers, then open the viewer:
+
+```sh
+(cd compare/before && python3 -m http.server 5401) &
+(cd compare/after  && python3 -m http.server 5402) &
+python3 -m http.server 5400 --directory compare   # then open http://localhost:5400
+```
+
+Regenerate a side with:
+
+```sh
+git -C ../.. checkout fd9a0c5   # or: fix/api-docs-rendering
+(cd ../crates/ox_content_napi && pnpm run build:debug)
+(cd ../npm/vite-plugin-ox-content && pnpm build)
+pnpm build && rm -rf compare/before && cp -r dist compare/before   # or compare/after
+```

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ox-content API docs — broken vs fixed</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { display: flex; flex-direction: column; height: 100vh; font-family: sans-serif; }
+      nav { display: flex; gap: 0.5rem; align-items: center; padding: 0.5rem 1rem; background: #1c2333; color: #dfe7f5; }
+      nav button { padding: 0.3rem 0.8rem; border: 1px solid #46557a; border-radius: 4px; background: #2a3550; color: inherit; cursor: pointer; }
+      nav button.active { background: #4f6fae; border-color: #4f6fae; }
+      main { display: grid; grid-template-columns: 1fr 1fr; flex: 1; }
+      section { display: flex; flex-direction: column; min-width: 0; }
+      h2 { font-size: 0.8rem; padding: 0.35rem 1rem; letter-spacing: 0.05em; text-transform: uppercase; }
+      .broken h2 { background: #5d1f24; color: #ffd9dc; }
+      .fixed h2 { background: #1d4d2b; color: #d7f5df; }
+      iframe { flex: 1; border: 0; border-left: 1px solid #ccc; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong>broken (fd9a0c5) vs fixed (fix/api-docs-rendering)</strong>
+      <button data-path="/api/index.html">Docs index</button>
+      <button data-path="/api/lib/classes/Counter/index.html" class="active">Class Counter</button>
+      <button data-path="/api/lib/type-aliases/CounterOptions/index.html">CounterOptions</button>
+      <button data-path="/api/lib/functions/createCounter/index.html">createCounter</button>
+    </nav>
+    <main>
+      <section class="broken">
+        <h2>Before — broken</h2>
+        <iframe id="before" src="http://localhost:5401/api/lib/classes/Counter/index.html"></iframe>
+      </section>
+      <section class="fixed">
+        <h2>After — fixed</h2>
+        <iframe id="after" src="http://localhost:5402/api/lib/classes/Counter/index.html"></iframe>
+      </section>
+    </main>
+    <script>
+      for (const btn of document.querySelectorAll('nav button')) {
+        btn.addEventListener('click', () => {
+          document.querySelector('nav button.active')?.classList.remove('active');
+          btn.classList.add('active');
+          document.getElementById('before').src = `http://localhost:5401${btn.dataset.path}`;
+          document.getElementById('after').src = `http://localhost:5402${btn.dataset.path}`;
+        });
+      }
+    </script>
+  </body>
+</html>
