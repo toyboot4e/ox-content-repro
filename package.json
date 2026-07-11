@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Minimum repro for four API-docs bugs: private class fields leak, unstyled member markup (readonly badge jammed against the name), dark param-type chip in light theme, search index unavailable on the dev server.",
   "scripts": {
-    "build": "vite build",
+    "build": "rm -rf dist && vite build",
     "dev": "vite",
     "check": "vite build && node check.mjs"
   },

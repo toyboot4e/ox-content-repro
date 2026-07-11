@@ -2,12 +2,19 @@
 // `pnpm check` does both). Prints BUG while broken, OK once fixed; exits
 // non-zero if any BUG remains. The dev-server search check spawns `vite`.
 import { spawn } from 'node:child_process';
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const read = (p) => readFileSync(p, 'utf8');
 const results = [];
 const report = (name, broken, detail) => results.push({ name, broken, detail });
+
+// One build emits several theme-css variants (per-page extras change the
+// hash); style assertions must read the css the asserted page itself links.
+const cssOf = (pageHtml) =>
+  [...pageHtml.matchAll(/href="[^"]*\/assets\/([^"]+\.css)"/g)]
+    .map((m) => read(join('dist/assets', m[1])))
+    .join('\n');
 
 // 1. TS-private class fields must not be documented.
 const classPage = read('dist/api/lib/classes/Counter/index.html');
@@ -17,12 +24,9 @@ report(
   'dist/api/lib/classes/Counter/index.html lists `count` / `step`',
 );
 
-// The theme CSS shared by every page.
-const assets = readdirSync('dist/assets').filter((f) => f.endsWith('.css'));
-const css = assets.map((f) => read(join('dist/assets', f))).join('\n');
-
 // 2. readonly badge: jammed markup + no styles for the member markup at all.
 const typePage = read('dist/api/lib/type-aliases/CounterOptions/index.html');
+const css = cssOf(typePage);
 // Fixed when the theme styles the badge (inline-block pill with its own
 // margin) — the compact markup itself is fine once styled.
 report(
@@ -53,7 +57,17 @@ report(
   'docs index links ./lib/index.md as ./lib/index/index.html',
 );
 
-// 5. Raw <a href="X.md"> anchors emitted by the docs generator must be
+// 5. With multiple member groups (Properties + Methods), grid auto-placement
+// must not drop the second group into the section grid's 6.5rem label column.
+const sectionChildRule =
+  cssOf(classPage).match(/\.ox-api-entry__section\s*>\s*:not\(h4\)[^{]*{[^}]*}/)?.[0] ?? '';
+report(
+  'second member group squeezed into the narrow label column',
+  classPage.includes('ox-api-entry__member-group') && !sectionChildRule.includes('grid-column'),
+  'section grid auto-places the Methods group into the 6.5rem column',
+);
+
+// 6. Raw <a href="X.md"> anchors emitted by the docs generator must be
 // converted like Markdown links (they 404 otherwise).
 const fnPage = read('dist/api/lib/functions/createCounter/index.html');
 report(

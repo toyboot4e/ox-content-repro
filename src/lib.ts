@@ -8,6 +8,11 @@ export class Counter {
   /** Documented private field — leaks into the docs with its description. */
   private readonly step: number = 1;
 
+  /** A public field, so the page renders BOTH a Properties group and a
+   * Methods group — the second group lands in the section grid's narrow
+   * 6.5rem label column and renders squeezed into a sliver. */
+  readonly label: string = 'counter';
+
   /** Advance the counter by its step. */
   increment(): number {
     this.count += this.step;

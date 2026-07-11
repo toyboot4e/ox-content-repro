@@ -33,7 +33,18 @@ alias, a function).
    `CounterOptions` chip on `createCounter`'s page) builds on
    `--octc-color-code-bg` — dark by design even in the light palette — plus a
    hardcoded `#243556`, so the chip renders as a dark pill on light pages.
-5. **Search index unavailable on the dev server.** `search-index.json` is
+5. **Second member group squeezed into a narrow column.**
+   `.ox-api-entry__section` is a `[6.5rem label | content]` grid; a class with
+   both Properties and Methods renders one group per kind, and grid
+   auto-placement drops the second group into the 6.5rem label column.
+6. **Module links rewritten to a nonexistent page.** The md→html link
+   conversion collapses `X/index.md` only in some branches; the docs root
+   links each module as `./lib/index/index.html`, which does not exist.
+7. **Raw md anchors left unconverted.** The generator emits raw
+   `<a href="X.md">` anchors alongside Markdown links; only the latter were
+   converted, so symbol links like `CounterOptions` on `createCounter`'s page
+   404.
+8. **Search index unavailable on the dev server.** `search-index.json` is
    written only by the static build (`closeBundle`); the dev server registers
    no handler for it, so the fetch falls through to the html fallback and the
    search UI reports the index unavailable. (`pnpm dev`, then request
