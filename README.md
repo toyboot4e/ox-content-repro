@@ -1,5 +1,12 @@
 # API-docs minimum repro
 
+Be sure to place it under `ox-content`:
+
+```
+ox-content/
+└── ox-content-repro/
+```
+
 Reproduces eight bugs in ox-content's generated API reference, using the
 workspace's own build (`link:` deps on `../crates/ox_content_napi` and
 `../npm/vite-plugin-ox-content`). Build both first:
