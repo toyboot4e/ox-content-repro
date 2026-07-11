@@ -53,7 +53,16 @@ report(
   'docs index links ./lib/index.md as ./lib/index/index.html',
 );
 
-// 5. /search-index.json must be served (as JSON) by the dev server.
+// 5. Raw <a href="X.md"> anchors emitted by the docs generator must be
+// converted like Markdown links (they 404 otherwise).
+const fnPage = read('dist/api/lib/functions/createCounter/index.html');
+report(
+  'raw md anchors left unconverted',
+  /href="[^"]*\.md["#]/.test(fnPage),
+  'createCounter page links CounterOptions as ../type-aliases/CounterOptions.md',
+);
+
+// 6. /search-index.json must be served (as JSON) by the dev server.
 // detached: killing the negative pid takes the whole group (pnpm AND vite);
 // killing only the wrapper leaves vite squatting on the port for the next run.
 const server = spawn('pnpm', ['exec', 'vite', '--port', '5399', '--strictPort'], {
